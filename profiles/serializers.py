@@ -3,10 +3,11 @@ from .models import UserProfile
 
 class UserProfileSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    
+    is_owner = serializers.SerializerMethodField()
+
     class Meta:
         model = UserProfile
-        fields = ['id', 'owner', 'created_at', 'updated_at', 'bio', 'content']
+        fields = ['id', 'owner', 'created_at', 'updated_at', 'bio', 'content', 'profile_picture', 'cover_photo', 'is_owner']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -20,3 +21,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
             representation['cover_photo'] = default_cover_photo_url
 
         return representation
+
+    # Add the get_is_owner method to check if the user is the owner
+    def get_is_owner(self, obj):
+        request = self.context.get('request')
+        return request.user == obj.owner

@@ -6,6 +6,15 @@ class Post(models.Model):
 
     image_filter_choices = [
         ('normal', 'Normal'),
+        ('black_and_white', 'Black and White'),
+        ('sepia', 'Sepia'),
+        ('vintage', 'Vintage'),
+        ('grayscale', 'Grayscale'),
+        ('warm', 'Warm Tone'),
+        ('cool', 'Cool Tone'),
+        ('invert', 'Invert Colors'),
+        ('blur', 'Blur'),
+        ('sharpen', 'Sharpen'),
     ]
 
     header = models.CharField(max_length=255)
