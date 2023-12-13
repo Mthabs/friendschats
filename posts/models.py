@@ -1,10 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Post(models.Model):
-
-    image_filter_choices = [
+    IMAGE_FILTER_CHOICES = [
         ('normal', 'Normal'),
         ('black_and_white', 'Black and White'),
         ('sepia', 'Sepia'),
@@ -16,15 +14,23 @@ class Post(models.Model):
         ('blur', 'Blur'),
         ('sharpen', 'Sharpen'),
     ]
-
-    header = models.CharField(max_length=255)
+    header = models.CharField(max_length=255, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    post_picture = models.ImageField(upload_to='post_images/', null=True, blank=True)
+    content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    content = models.TextField(blank=True)
-
+    image_filter = models.CharField(
+        max_length=32,
+        choices=IMAGE_FILTER_CHOICES,
+        default='normal',
+        blank=True,
+        null=True
+    )
     class Meta:
+        verbose_name = "Post"
+        verbose_name_plural = "Posts"
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'{self.id} {self.title}'
+        return f"Post by {self.id} at {self.header}"
