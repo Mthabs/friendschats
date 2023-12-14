@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions
-from chat_tribe.permissions import IsOwnerOrReadOnly
+from friends_chats.permissions import IsOwnerOrReadOnly
 from likes.models import Like
 from likes.serializers import LikeSerializer
 
