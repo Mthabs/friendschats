@@ -1,18 +1,16 @@
-from rest_framework import generics, permissions
-from chat_tribe.permissions import IsOwnerOrReadOnly
-from likes.models import Like
-from likes.serializers import LikeSerializer
+from rest_framework import serializers
+from django.db import IntegrityError, transaction
+from .models import Like
 
-class LikeList(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    serializer_class = LikeSerializer
-    queryset = Like.objects.all()
+class LikeSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    class Meta:
+        model = Like
+        fields = ['id', 'post', 'owner', 'created_at']
 
-
-class LikeDetail(generics.RetrieveDestroyAPIView):
-    permission_classes = [IsOwnerOrReadOnly]
-    serializer_class = LikeSerializer
-    queryset = Like.objects.all()
+    def create(self, validated_data):
+        try:
+            return super().create(validated_data)
+        except IntegrityError:
+            raise serializers.ValidationError({"error" : "You have already liked this post."})
