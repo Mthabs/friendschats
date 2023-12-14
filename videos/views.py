@@ -14,3 +14,8 @@ class VideoListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+class VideoDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Video.objects.all()
+    serializer_class = VideoSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
