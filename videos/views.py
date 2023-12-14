@@ -40,3 +40,12 @@ class VideoUnlikeView(generics.UpdateAPIView):
         video_instance = self.get_object()
         Like.objects.filter(owner=request.user, content_type=video_instance, object_id=video_instance.id).delete()
         return Response(status=204)
+
+class VideoCommentCreateView(generics.CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        video_instance = Video.objects.get(pk=self.kwargs['pk'])
+        serializer.save(owner=self.request.user, content_type=video_instance, object_id=video_instance.id)
