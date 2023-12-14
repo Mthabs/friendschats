@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions
-from chat_tribe.permissions import IsOwnerOrReadOnly
+from friends_chats.permissions import IsOwnerOrReadOnly
 from .models import Comment
 from .serializers import CommentSerializer, CommentDetailSerializer
 
