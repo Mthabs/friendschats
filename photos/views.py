@@ -1,8 +1,7 @@
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions
 from rest_framework.response import Response
 from .models import Photo
 from .serializers import PhotoSerializer
-from .permissions import IsOwnerOrReadOnly
 
 class PhotoListCreateView(generics.ListCreateAPIView):
     queryset = Photo.objects.all()
@@ -15,7 +14,7 @@ class PhotoListCreateView(generics.ListCreateAPIView):
 class PhotoDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class PhotoLikeView(generics.UpdateAPIView):
     queryset = Photo.objects.all()
@@ -24,6 +23,17 @@ class PhotoLikeView(generics.UpdateAPIView):
 
     def patch(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.likes.add(request.user.userprofile)
+        instance.likes.add(request.user.userprofile.like)
         serializer = self.get_serializer(instance)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data)
+
+class PhotoUnlikeView(generics.UpdateAPIView):
+    queryset = Photo.objects.all()
+    serializer_class = PhotoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.likes.remove(request.user.userprofile.like)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)

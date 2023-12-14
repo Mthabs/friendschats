@@ -1,5 +1,6 @@
 from django.db import models
 from profiles.models import UserProfile
+from likes.models import Like
 
 class Photo(models.Model):
     owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -7,7 +8,8 @@ class Photo(models.Model):
     caption = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    likes = models.ManyToManyField(Like, related_name='liked_photos', blank=True)
+    
     class Meta:
         ordering = ['-created_at']
         verbose_name = "Photo"
