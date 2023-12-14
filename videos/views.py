@@ -30,3 +30,13 @@ class VideoLikeView(generics.UpdateAPIView):
         like, created = Like.objects.get_or_create(owner=request.user, content_type=video_instance, object_id=video_instance.id)
         serializer = LikeSerializer(like)
         return Response(serializer.data)
+
+class VideoUnlikeView(generics.UpdateAPIView):
+    queryset = Video.objects.all()
+    serializer_class = VideoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, *args, **kwargs):
+        video_instance = self.get_object()
+        Like.objects.filter(owner=request.user, content_type=video_instance, object_id=video_instance.id).delete()
+        return Response(status=204)
