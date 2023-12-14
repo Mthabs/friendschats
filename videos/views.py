@@ -19,3 +19,14 @@ class VideoDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class VideoLikeView(generics.UpdateAPIView):
+    queryset = Video.objects.all()
+    serializer_class = VideoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, *args, **kwargs):
+        video_instance = self.get_object()
+        like, created = Like.objects.get_or_create(owner=request.user, content_type=video_instance, object_id=video_instance.id)
+        serializer = LikeSerializer(like)
+        return Response(serializer.data)
