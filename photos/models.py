@@ -1,9 +1,9 @@
 from django.db import models
-from profiles.models import UserProfile
+from django.contrib.auth.models import User
 from likes.models import Like
 
 class Photo(models.Model):
-    owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='photos/')
     caption = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from likes.models import Like
 
 class Post(models.Model):
     IMAGE_FILTER_CHOICES = [
@@ -20,6 +21,7 @@ class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    likes = models.ManyToManyField(Like, related_name='liked_posts', blank=True)
     image_filter = models.CharField(
         max_length=32,
         choices=IMAGE_FILTER_CHOICES,
