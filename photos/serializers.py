@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Photo
 from likes.serializers import LikeSerializer
+from PIL import Image
 
 class PhotoSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.user.username')
@@ -13,6 +14,7 @@ class PhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
         fields = ['id', 'owner', 'profile_picture', 'image', 'caption', 'created_at', 'updated_at', 'likes_count', 'likes']
+        read_only_fields = ['profile_picture']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -26,13 +28,15 @@ class PhotoSerializer(serializers.ModelSerializer):
 
     def validate_image(self, value):
         if value:
+            image = Image.open(value)
             max_size = 2 * 1024 * 1024  # 2 MB
             if value.size > max_size:
                 raise serializers.ValidationError('Image size cannot exceed 2 MB.')
-            if value.height > 4096:
-                raise serializers.ValidationError('Image height cannot exceed 4096px.')
-            if value.width > 4096:
-                raise serializers.ValidationError('Image width cannot exceed 4096px.')
+            max_height = 4096
+            max_width = 4096
+            if image.height > max_height or image.width > max_width:
+                raise serializers.ValidationError('Image dimensions cannot exceed 4096x4096px.')
+
         return value
     
     def get_likes_count(self, instance):
