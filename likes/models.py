@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Like(models.Model):
-    post = models.ForeignKey('posts.Post', on_delete=models.CASCADE, related_name='post_likes')
+    post = models.ForeignKey('posts.Post', on_delete=models.CASCADE, related_name='likes')
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
