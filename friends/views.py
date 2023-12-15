@@ -13,7 +13,7 @@ class FriendListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-class FriendDetailView(generics.RetrieveDestroyAPIView):
+class FriendUnfriendView(generics.RetrieveDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Friend.objects.all()
     serializer_class = FriendSerializer

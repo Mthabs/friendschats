@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import LikeListCreateView, LikeDetailView  
+from .views import LikeListCreateView, LikeUnlikeView  
 
 urlpatterns = [
     path('likes/', LikeListCreateView.as_view(), name='like-list-create'),
-    path('likes/<int:pk>/', LikeDetailView.as_view(), name='like-detail'),
+    path('likes/<int:pk>/', LikeUnlikeView.as_view(), name='like-Unlike'),
 ]
