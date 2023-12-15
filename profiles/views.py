@@ -1,21 +1,22 @@
-from django.shortcuts import get_object_or_404
-from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import generics, permissions, serializers
+from friends_chats.permissions import IsOwnerOrReadOnly
 from .models import UserProfile
 from .serializers import UserProfileSerializer
-from friends_chats.permissions import IsOwnerOrReadOnly
+
 
 class UserProfileListCreateView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+    
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
 class UserProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+   
 
 

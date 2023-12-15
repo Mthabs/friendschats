@@ -4,15 +4,17 @@ from likes.models import Like
 from likes.serializers import LikeSerializer
 
 class LikeListCreateView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    serializer_class = LikeSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
 
 class LikeDetailView(generics.RetrieveDestroyAPIView):
-    permission_classes = [IsOwnerOrReadOnly]
-    serializer_class = LikeSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    
