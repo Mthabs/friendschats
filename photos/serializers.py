@@ -1,20 +1,20 @@
 from rest_framework import serializers
 from .models import Photo
 from likes.serializers import LikeSerializer
-from PIL import Image
+
 
 class PhotoSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.user.username')
     profile_picture = serializers.ReadOnlyField(source='user.userprofile.profile_picture_url')
-    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
-    updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    is_owner = serializers.SerializerMethodField()
+
     likes_count = serializers.SerializerMethodField()
     likes = LikeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Photo
-        fields = ['id', 'owner', 'profile_picture', 'image', 'caption', 'created_at', 'updated_at', 'likes_count', 'likes']
-        read_only_fields = ['profile_picture']
+        fields = ['id', 'owner', 'profile_picture', 'image', 'caption', 'created_at', 'updated_at', 'likes_count', 'likes','is_owner']
+        
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -38,6 +38,10 @@ class PhotoSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('Image dimensions cannot exceed 4096x4096px.')
 
         return value
-    
+        
+    def get_is_owner(self, obj):
+        request = self.context['request']
+        return request.user == obj.owner
+
     def get_likes_count(self, instance):
         return instance.likes.count()
