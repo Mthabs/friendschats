@@ -8,10 +8,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     following_id = serializers.SerializerMethodField()
     friendship_id = serializers.SerializerMethodField()
+    posts_count = serializers.SerializerMethodField()
 
     class Meta:
         model = UserProfile
-        fields = ['id', 'owner', 'created_at', 'updated_at', 'bio', 'content', 'profile_picture', 'cover_photo', 'following_id', 'friendship_id', 'is_owner']
+        fields = ['id', 'owner', 'created_at', 'updated_at', 'name', 'content', 'profile_picture', 'cover_photo', 'following_id', 'friendship_id', 'is_owner', 'posts_count']
 
     def to_representation(self, instance):
         if isinstance(instance, UserProfile):
@@ -33,6 +34,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
             request = self.context.get('request')
             return request.user == obj.owner
         return False
+
+    def get_posts_count(self, obj):
+        return obj.owner.posts.all().count()
 
     def get_following_id(self, obj):
         if isinstance(obj, UserProfile):

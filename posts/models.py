@@ -18,7 +18,7 @@ class Post(models.Model):
         ('sharpen', 'Sharpen'),
     ]
     header = models.CharField(max_length=255, blank=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     post_picture = models.ImageField(upload_to='post_images/', null=True, blank=True)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
