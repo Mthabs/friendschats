@@ -41,3 +41,7 @@ class Post(models.Model):
     @property
     def like_count(self):
         return self.likes.count()
+
+    @property
+    def comment_count(self):
+        return self.comments.count()
