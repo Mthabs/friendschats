@@ -12,6 +12,7 @@ class LikevideoCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+
 class LikevideoUnlikeView(generics.RetrieveDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Likevideo.objects.all()

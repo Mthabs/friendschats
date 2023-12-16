@@ -1,28 +1,30 @@
 from rest_framework import serializers
 from .models import Video
-from likes.serializers import LikeSerializer
-from comments.serializers import CommentSerializer
+from .models import Likevideo
 
 class VideoSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    likes_count = serializers.SerializerMethodField()
-    comments_count = serializers.SerializerMethodField()
-    likes = LikeSerializer(many=True, read_only=True)
-    comments = CommentSerializer(many=True, read_only=True)
+    is_owner = serializers.SerializerMethodField()
+    likevideo_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Video
-        fields = ['id', 'owner', 'title', 'video_file', 'description', 'created_at', 'updated_at', 'likes_count', 'comments_count', 'likes', 'comments']
+        fields = ['id', 'owner', 'title', 'video_file', 'description', 'created_at', 'updated_at', 'likevideo_id', 'is_owner']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['likes_count'] = instance.likes.count()
-        representation['comments_count'] = instance.comments.count()
         
         return representation
 
-    def get_likes_count(self, instance):
-        return instance.likes.count()
 
-    def get_comments_count(self, instance):
-        return instance.comments.count()
+    def get_is_owner(self, obj):
+        request = self.context.get('request')
+        return request.user == obj.owner
+
+    def get_likevideo_id(self, obj):
+        user = self.context['request'].user
+        try:
+            likevideo_instance = Likevideo.objects.get(owner=user, video=obj)
+            return likevideo_instance.id
+        except Likevideo.DoesNotExist:
+            return None

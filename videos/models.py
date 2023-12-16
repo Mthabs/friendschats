@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
-from likes.models import Like
+from likevideos.models import Likevideo
 from comments.models import Comment
 
 class Video(models.Model):
@@ -11,7 +11,7 @@ class Video(models.Model):
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    likes = GenericRelation(Like, related_query_name='video_likes')
+    likevideos = GenericRelation(Likevideo, related_query_name='video_likevideos')
     comments = GenericRelation(Comment, related_query_name='video_comments')
 
     class Meta:
