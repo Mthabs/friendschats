@@ -1,18 +1,18 @@
-from rest_framework import serializers
 from .models import Photo
-from .models import Likephoto
 from PIL import Image
-
+from rest_framework import serializers
+from .models import Likephoto
+from photocomments.models import Photocomment
 
 class PhotoSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.user.username')
     is_owner = serializers.SerializerMethodField()
     likephoto_id = serializers.SerializerMethodField()
-    
+    comment_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Photo
-        fields = ['id', 'owner', 'image', 'caption', 'created_at', 'updated_at', 'likephoto_id','is_owner']
+        fields = ['id', 'owner', 'image', 'caption', 'created_at', 'updated_at', 'likephoto_id','is_owner', 'comment_count']
         
 
     def to_representation(self, instance):
@@ -48,3 +48,6 @@ class PhotoSerializer(serializers.ModelSerializer):
             return likephoto_instance.id
         except Likephoto.DoesNotExist:
             return None
+
+    def get_comment_count(self, obj):
+        return obj.comment_count
