@@ -17,4 +17,4 @@ class PhotocommentSerializer(serializers.ModelSerializer):
         return request.user == obj.owner
 
 class PhotocommentDetailSerializer(PhotocommentSerializer):
-    post = serializers.ReadOnlyField(source='photo.id')
+    photo = serializers.ReadOnlyField(source='photo.id')
