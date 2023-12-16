@@ -33,7 +33,6 @@ class PostSerializer(serializers.ModelSerializer):
             if value.size > max_size:
                 raise serializers.ValidationError('Image size cannot exceed 2 MB.')
 
-            # Use Pillow to open the image and get its dimensions
             try:
                 with Image.open(value) as img:
                     width, height = img.size
