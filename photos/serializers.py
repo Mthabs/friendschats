@@ -1,28 +1,26 @@
 from rest_framework import serializers
 from .models import Photo
-from likes.serializers import LikeSerializer
+from .models import Likephoto
+from PIL import Image
 
 
 class PhotoSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.user.username')
-    profile_picture = serializers.ReadOnlyField(source='user.userprofile.profile_picture_url')
     is_owner = serializers.SerializerMethodField()
-
-    likes_count = serializers.SerializerMethodField()
-    likes = LikeSerializer(many=True, read_only=True)
+    likephoto_id = serializers.SerializerMethodField()
+    
 
     class Meta:
         model = Photo
-        fields = ['id', 'owner', 'profile_picture', 'image', 'caption', 'created_at', 'updated_at', 'likes_count', 'likes','is_owner']
+        fields = ['id', 'owner', 'image', 'caption', 'created_at', 'updated_at', 'likephoto_id','is_owner']
         
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['likes_count'] = instance.likes.count()
-        default_profile_picture_url = 'https://res.cloudinary.com/dnt7oro5y/image/upload/v1702078965/default_profile_yansvo.jpg'
+        default_image_url = 'https://res.cloudinary.com/dnt7oro5y/image/upload/v1702078965/default_profile_yansvo.jpg'
 
-        if 'profile_picture' not in representation:
-            representation['profile_picture'] = default_profile_picture_url
+        if 'image' not in representation:
+            representation['image'] = default_image_url
 
         return representation
 
@@ -43,5 +41,10 @@ class PhotoSerializer(serializers.ModelSerializer):
         request = self.context['request']
         return request.user == obj.owner
 
-    def get_likes_count(self, instance):
-        return instance.likes.count()
+    def get_likephoto_id(self, obj):
+        user = self.context['request'].user
+        try:
+            likephoto_instance = Likephoto.objects.get(owner=user, photo=obj)
+            return likephoto_instance.id
+        except Likephoto.DoesNotExist:
+            return None

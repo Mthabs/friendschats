@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
-from likes.models import Like
+from likephotos.models import Likephoto
 from comments.models import Comment
 
 class Photo(models.Model):
@@ -10,7 +10,7 @@ class Photo(models.Model):
     caption = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    likes = GenericRelation(Like, related_query_name='photo_likes')
+    likephotos = GenericRelation(Likephoto, related_query_name='photo_likephotos')
     comments = GenericRelation(Comment, related_query_name='photo_comments')
     class Meta:
         ordering = ['-created_at']
