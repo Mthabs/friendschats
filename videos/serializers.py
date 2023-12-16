@@ -6,10 +6,10 @@ class VideoSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
     likevideo_id = serializers.SerializerMethodField()
-
+    comment_count = serializers.ReadOnlyField()
     class Meta:
         model = Video
-        fields = ['id', 'owner', 'title', 'video_file', 'description', 'created_at', 'updated_at', 'likevideo_id', 'is_owner']
+        fields = ['id', 'owner', 'title', 'video_file', 'description', 'created_at', 'updated_at', 'likevideo_id', 'is_owner','comment_count']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -28,3 +28,6 @@ class VideoSerializer(serializers.ModelSerializer):
             return likevideo_instance.id
         except Likevideo.DoesNotExist:
             return None
+
+    def get_comment_count(self, obj):
+        return obj.comment_count

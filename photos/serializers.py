@@ -8,7 +8,7 @@ class PhotoSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.user.username')
     is_owner = serializers.SerializerMethodField()
     likephoto_id = serializers.SerializerMethodField()
-    comment_count = serializers.SerializerMethodField()
+    comment_count = serializers.ReadOnlyField()
 
     class Meta:
         model = Photo
