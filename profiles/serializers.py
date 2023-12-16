@@ -1,13 +1,15 @@
 from rest_framework import serializers
 from .models import UserProfile
+from followers.models import Follower
 
 class UserProfileSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
+    following_id = serializers.SerializerMethodField()
 
     class Meta:
         model = UserProfile
-        fields = ['id', 'owner', 'created_at', 'updated_at', 'bio', 'content', 'profile_picture', 'cover_photo', 'is_owner']
+        fields = ['id', 'owner', 'created_at', 'updated_at', 'bio', 'content', 'profile_picture', 'cover_photo','following_id', 'is_owner']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -22,7 +24,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         return representation
 
-    # Add the get_is_owner method to check if the user is the owner
+    
     def get_is_owner(self, obj):
         request = self.context.get('request')
         return request.user == obj.owner
+
+    def get_following_id(self, obj):
+        user = self.context['request'].user
+        try:
+            following = Follower.objects.get(owner=user, followed=obj.owner)
+            return following.id
+        except Follower.DoesNotExist:
+            return None
