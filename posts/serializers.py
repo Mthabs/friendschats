@@ -9,10 +9,11 @@ class PostSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ReadOnlyField(source='user.userprofile.profile_picture_url')
     is_owner = serializers.SerializerMethodField()
     like_id = serializers.SerializerMethodField()
+    like_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ['id', 'profile_id', 'owner', 'header', 'content', 'created_at', 'updated_at','profile_picture', 'post_picture', 'like_id' , 'is_owner', 'image_filter']
+        fields = ['id', 'profile_id', 'owner', 'header', 'content', 'created_at', 'updated_at','profile_picture', 'post_picture', 'like_id' , 'is_owner', 'image_filter', 'like_count']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -56,3 +57,6 @@ class PostSerializer(serializers.ModelSerializer):
             return like.id
         except Like.DoesNotExist:
             return None
+
+    def get_like_count(self, obj):
+        return obj.like_count
