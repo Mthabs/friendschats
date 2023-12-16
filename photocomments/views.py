@@ -8,7 +8,6 @@ class PhotocommentListCreateView(generics.ListCreateAPIView):
     queryset = Photocomment.objects.all()
     serializer_class = PhotocommentSerializer
     
-    
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
