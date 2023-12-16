@@ -7,8 +7,16 @@ from .serializers import UserProfileSerializer
 
 class UserProfileListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
-    queryset = UserProfile.objects.annotate(posts_count=Count('owner__posts'))
+    queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+
+    def get_queryset(self):
+        queryset = UserProfile.objects.annotate(
+            posts_count=Count('owner__posts'),
+            followers_count=Count('owner__following'),  
+            following_count=Count('owner__followed')    
+        )
+        return queryset
 
     def perform_create(self, serializer):
         user = self.request.user
