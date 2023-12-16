@@ -14,7 +14,8 @@ class UserProfileListCreateView(generics.ListCreateAPIView):
         queryset = UserProfile.objects.annotate(
             posts_count=Count('owner__posts'),
             followers_count=Count('owner__following'),  
-            following_count=Count('owner__followed')    
+            following_count=Count('owner__followed'),
+            friends_count=Count('owner__friendships')    
         )
         return queryset
 
