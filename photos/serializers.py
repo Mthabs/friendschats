@@ -5,37 +5,38 @@ from .models import Likephoto
 from photocomments.models import Photocomment
 
 class PhotoSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.user.username')
+    owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
     likephoto_id = serializers.SerializerMethodField()
+    like_count = serializers.ReadOnlyField()
     comment_count = serializers.ReadOnlyField()
 
     class Meta:
         model = Photo
-        fields = ['id', 'owner', 'image', 'caption', 'created_at', 'updated_at', 'likephoto_id','is_owner', 'comment_count']
+        fields = ['id', 'owner', 'image', 'caption', 'created_at', 'updated_at', 'likephoto_id','is_owner', 'like_count', 'comment_count']
         
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        default_image_url = 'https://res.cloudinary.com/dnt7oro5y/image/upload/v1702078965/default_profile_yansvo.jpg'
+ #       default_image_url = 'https://res.cloudinary.com/dnt7oro5y/image/upload/v1702078965/default_profile_yansvo.jpg'
 
-        if 'image' not in representation:
-            representation['image'] = default_image_url
+#        if 'image' not in representation:
+ #           representation['image'] = default_image_url
 
         return representation
 
-    def validate_image(self, value):
-        if value:
-            image = Image.open(value)
-            max_size = 2 * 1024 * 1024  
-            if value.size > max_size:
-                raise serializers.ValidationError('Image size cannot exceed 2 MB.')
-            max_height = 4096
-            max_width = 4096
-            if image.height > max_height or image.width > max_width:
-                raise serializers.ValidationError('Image dimensions cannot exceed 4096x4096px.')
+ #   def validate_image(self, value):
+ #       if value:
+ #           image = Image.open(value)
+  #          max_size = 2 * 1024 * 1024  
+  #          if value.size > max_size:
+  #              raise serializers.ValidationError('Image size cannot exceed 2 MB.')
+  #          max_height = 4096
+ #           max_width = 4096
+ #           if image.height > max_height or image.width > max_width:
+ #               raise serializers.ValidationError('Image dimensions cannot exceed 4096x4096px.')
 
-        return value
+ #       return value
         
     def get_is_owner(self, obj):
         request = self.context['request']
@@ -48,6 +49,9 @@ class PhotoSerializer(serializers.ModelSerializer):
             return likephoto_instance.id
         except Likephoto.DoesNotExist:
             return None
+    
+    def get_likephotos_count(self, obj):
+        return obj.like_count
 
     def get_comment_count(self, obj):
         return obj.comment_count

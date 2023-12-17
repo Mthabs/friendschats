@@ -9,7 +9,15 @@ class UserProfileListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     serializer_class = UserProfileSerializer
 
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
+    search_fields = [
+        'owner__username',
+        'name',
+        'content',
+    ]
     ordering_fields = [
         'posts_count',
         'followers_count',

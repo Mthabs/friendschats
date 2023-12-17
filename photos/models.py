@@ -15,9 +15,12 @@ class Photo(models.Model):
         verbose_name_plural = "Photos"
 
     def __str__(self):
-        return f"Photo by {self.owner.user.username} at {self.created_at}"
+        return f"Photo by {self.id} at {self.caption}"
 
-    
+    @property
+    def like_count(self):
+        return self.likephotos.count()
+        
     @property
     def comment_count(self):
         return self.photocomments.count()

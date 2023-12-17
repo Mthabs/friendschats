@@ -15,7 +15,11 @@ class Video(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"Video by {self.owner.username}: {self.title}"
+        return f"Video by {self.id}: {self.title}"
+
+    @property
+    def like_count(self):
+        return self.likevideos.count()
 
     @property
     def comment_count(self):
