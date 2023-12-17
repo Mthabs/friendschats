@@ -27,7 +27,7 @@ class PhotoSerializer(serializers.ModelSerializer):
     def validate_image(self, value):
         if value:
             image = Image.open(value)
-            max_size = 2 * 1024 * 1024  # 2 MB
+            max_size = 2 * 1024 * 1024  
             if value.size > max_size:
                 raise serializers.ValidationError('Image size cannot exceed 2 MB.')
             max_height = 4096
