@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions
 from friends_chats.permissions import IsOwnerOrReadOnly
 from .models import Videocomment
@@ -7,7 +8,8 @@ class VideocommentListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Videocomment.objects.all()
     serializer_class = VideocommentSerializer
-    
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['video']
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
