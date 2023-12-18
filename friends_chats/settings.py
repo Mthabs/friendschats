@@ -35,10 +35,17 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DATETIME_FORMAT': '%d %b %Y',
     }
-if 'DEV' not in os.environ:
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
-        'rest_framework.renderers.JSONRenderer'
-    ]
+if 'DEV' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    }
 
 
 REST_USE_JWT = True
@@ -58,7 +65,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEV' in os.environ
 
-ALLOWED_HOSTS = ['8000-mthabs-friendschats-ctlprh2bet.us2.codeanyapp.com','chatlife-ab3511138779.herokuapp.com']
+ALLOWED_HOSTS = ['chatlife-ab3511138779.herokuapp.com', '8000-mthabs-friendschats-ctlprh2bet.us2.codeanyapp.com']
 
 
 # Application definition
