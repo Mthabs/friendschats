@@ -58,7 +58,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEV' in os.environ
 
-ALLOWED_HOSTS = ['8000-mthabs-friendschats-ctlprh2bet.us2.codeanyapp.com','chatlife.herokuapp.com']
+ALLOWED_HOSTS = ['8000-mthabs-friendschats-ctlprh2bet.us2.codeanyapp.com','chatlife-ab3511138779.herokuapp.com']
 
 
 # Application definition
