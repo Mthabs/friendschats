@@ -21,7 +21,7 @@ from .views import root_route
 urlpatterns = [
     path('', root_route),
     path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),
+    path('api-auth/', include('rest_framework.urls')), 
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
     path('api/', include('profiles.urls')),
@@ -36,6 +36,5 @@ urlpatterns = [
     path('api/', include('videos.urls')),
     path('api/', include('videocomments.urls')),
     path('api/', include('followers.urls')),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
 ]
