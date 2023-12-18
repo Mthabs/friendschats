@@ -4,7 +4,6 @@ from friends_chats.permissions import IsOwnerOrReadOnly
 from .models import UserProfile
 from .serializers import UserProfileSerializer
 
-
 class UserProfileListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     serializer_class = UserProfileSerializer
@@ -26,7 +25,6 @@ class UserProfileListCreateView(generics.ListCreateAPIView):
         'owner__following__created_at',
         'owner__followed__created_at',
     ]
-
 
     def get_queryset(self):
         queryset = UserProfile.objects.annotate(
