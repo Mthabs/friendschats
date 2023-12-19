@@ -16,9 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
+from .views import root_route
 
 urlpatterns = [
+    path('', root_route),
     path('admin/', admin.site.urls),
+    path('api-auth/', include('rest_framework.urls')), 
+    path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
     path('api/', include('profiles.urls')),
     path('api/', include('posts.urls')),
     path('api/', include('friends.urls')),
@@ -27,8 +32,9 @@ urlpatterns = [
     path('api/', include('likevideos.urls')),
     path('api/', include('comments.urls')),
     path('api/', include('photos.urls')),
+    path('api/', include('photocomments.urls')),
     path('api/', include('videos.urls')),
+    path('api/', include('videocomments.urls')),
     path('api/', include('followers.urls')),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
 ]
