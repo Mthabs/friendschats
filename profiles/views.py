@@ -5,7 +5,7 @@ from .models import UserProfile
 from .serializers import UserProfileSerializer
 
 class UserProfileListCreateView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = UserProfileSerializer
 
     filter_backends = [
